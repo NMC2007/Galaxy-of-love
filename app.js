@@ -29,17 +29,21 @@ window.onload = function () {
 
         const z = Math.floor(Math.random() * 500 - 250);
 
-        el.style.left = Math.random() * window.innerWidth + 'px';
-        el.style.fontSize = `${Math.random() * 6 + 20}px`;
+
+        const containerWidth = container.offsetWidth;
+        el.style.left = Math.random() * (containerWidth - 200) + 'px';
+
+        el.style.fontSize = `${Math.random() * (26 - 12) + 12}px`;
         el.style.setProperty('--z-depth', `${z}px`);
         el.style.zIndex = 500 - Math.abs(z);
-        el.style.animationDuration = `${Math.random() * 4 + 8}s`;
+        el.style.animationDuration = `${Math.random() * 4 + 6}s`;
 
         container.appendChild(el);
         setTimeout(() => el.remove(), 10000);
     }
 
-    setInterval(CreateFallingElement, 200);
+
+    setInterval(CreateFallingElement, 100);
 
     // PC: di chuột
     document.addEventListener('mousemove', (e) => {
@@ -50,25 +54,42 @@ window.onload = function () {
 
     // MOBILE: vuốt chạm
     let lastTouch = { x: 0, y: 0 };
+    let currentRotation = { x: 0, y: 0 };
+
     document.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
             lastTouch.x = e.touches[0].clientX;
             lastTouch.y = e.touches[0].clientY;
         }
-    });
+    }, { passive: false });
 
     document.addEventListener('touchmove', (e) => {
         if (e.touches.length === 1) {
+            e.preventDefault();
+
             const dx = e.touches[0].clientX - lastTouch.x;
             const dy = e.touches[0].clientY - lastTouch.y;
-            const rotateX = dy * 0.3;
-            const rotateY = -dx * 0.3;
-            rotateContainer(rotateX, rotateY);
+
+            // Điều chỉnh độ nhạy
+            currentRotation.x += dy * 0.15;
+            currentRotation.y += -dx * 0.15;
+
+            // Giới hạn góc xoay (tuỳ chọn)
+            currentRotation.x = Math.max(-40, Math.min(40, currentRotation.x));
+            currentRotation.y = Math.max(-40, Math.min(40, currentRotation.y));
+
+            rotateContainer(currentRotation.x, currentRotation.y);
 
             lastTouch.x = e.touches[0].clientX;
             lastTouch.y = e.touches[0].clientY;
         }
-    });
+    }, { passive: false });
+
+    function rotateContainer(rx, ry) {
+        container.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        containerBGR.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
+
 
     function rotateContainer(rx, ry) {
         container.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
