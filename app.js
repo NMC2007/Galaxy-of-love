@@ -41,44 +41,37 @@ window.onload = function () {
 
     setInterval(CreateFallingElement, 200);
 
-    // Di chuyển chuột trên PC
+    // PC: di chuột
     document.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth - 0.5) * 60;
         const y = (e.clientY / window.innerHeight - 0.5) * 60;
-        container.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
-        containerBGR.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
+        rotateContainer(y, -x);
     });
 
-    // iOS yêu cầu xin quyền cảm biến
-    function enableDeviceOrientation() {
-        if (
-            typeof DeviceOrientationEvent !== 'undefined' &&
-            typeof DeviceOrientationEvent.requestPermission === 'function'
-        ) {
-            // iOS
-            DeviceOrientationEvent.requestPermission()
-                .then((response) => {
-                    if (response === 'granted') {
-                        window.addEventListener('deviceorientation', handleOrientation);
-                    } else {
-                        alert('Bạn cần cấp quyền để dùng cảm biến nghiêng trên iPhone.');
-                    }
-                })
-                .catch(console.error);
-        } else {
-            // Android
-            window.addEventListener('deviceorientation', handleOrientation);
+    // MOBILE: vuốt chạm
+    let lastTouch = { x: 0, y: 0 };
+    document.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+            lastTouch.x = e.touches[0].clientX;
+            lastTouch.y = e.touches[0].clientY;
         }
-    }
+    });
 
-    // Hàm xử lý chuyển động
-    function handleOrientation(event) {
-        const x = event.beta || 0;  // nghiêng trước sau
-        const y = event.gamma || 0; // nghiêng trái phải
-        container.style.transform = `rotateX(${x / 35}deg) rotateY(${y / 35}deg)`;
-        containerBGR.style.transform = `rotateX(${x / 35}deg) rotateY(${y / 35}deg)`;
-    }
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1) {
+            const dx = e.touches[0].clientX - lastTouch.x;
+            const dy = e.touches[0].clientY - lastTouch.y;
+            const rotateX = dy * 0.3;
+            const rotateY = -dx * 0.3;
+            rotateContainer(rotateX, rotateY);
 
-    // Gọi khi người dùng nhấn vào màn hình (iOS cần tương tác người dùng)
-    document.body.addEventListener('click', enableDeviceOrientation, { once: true });
+            lastTouch.x = e.touches[0].clientX;
+            lastTouch.y = e.touches[0].clientY;
+        }
+    });
+
+    function rotateContainer(rx, ry) {
+        container.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+        containerBGR.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    }
 };
