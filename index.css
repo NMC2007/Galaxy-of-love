@@ -124,8 +124,8 @@ body {
 #container {
     position: absolute;
     top: 0;
-    left: -20%;
-    width: 200vw;
+    left: -25vw;
+    width: 150vw;
     height: 100vh;
     will-change: transform;
     overflow: visible;
