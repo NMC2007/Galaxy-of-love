@@ -2,17 +2,25 @@ window.onload = function () {
     const container = document.getElementById('container');
 
     const texts = [
-        'Nguyễn Mạnh Cường',
-        'Yêu emmmmmm ♥♥',
+        'Ngoan xinh yêu♥',
+        'cinn❤️',
+        'Vợ',
+        'Em yêu anhh ♥',
+        'Luôn bên anh ♥',
         'Love u so much ♥',
-        'Luôn luôn bên nhau ♥',
-        'My heart beats for you',
-        'I’m so lucky to have you',
+        'Dreaming of us ♥',
+        'Immersed in your love',
+        'Text me, 1 miss you',
         '♥',
         '❤️',
         '💗',
         '💓',
-        '💘'
+        '💘',
+        '🧸',
+        '🍓',
+        '🫧',
+        '🎀'
+
     ];
 
     const textsColor = [
@@ -24,64 +32,73 @@ window.onload = function () {
 
 
 
-    // ✅ Chỉ chặn cuộn bằng 1 ngón, cho phép zoom bằng 2 ngón
+    // chống cuộn
     document.addEventListener('touchmove', function (e) {
-        if (e.touches.length > 1) return; // Cho phép pinch zoom
-        e.preventDefault();              // Chặn cuộn bằng 1 ngón
+        e.preventDefault();
     }, { passive: false });
 
-    // ✅ Giữ nguyên để chặn cuộn bằng chuột (không ảnh hưởng pinch zoom)
     document.addEventListener('wheel', function (e) {
         e.preventDefault();
     }, { passive: false });
 
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gesturechange', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', function (e) {
+        e.preventDefault();
+    });
 
 
     // chữ rơi
     function CreateFallingElement() {
         const el = document.createElement('div');
         el.className = 'falling';
-
+    
         el.textContent = texts[Math.floor(Math.random() * texts.length)];
         el.style.color = textsColor[Math.floor(Math.random() * textsColor.length)];
-
+    
         const z = Math.floor(Math.random() * 500 - 250);
         el.style.setProperty('--z-depth', `${z}px`);
-
+    
         const absZ = Math.abs(z);
-
+    
         let fontSize, duration, opacity;
-
+    
         if (absZ > 180) {
             fontSize = Math.random() * (18 - 12) + 12;
             duration = Math.random() * 3 + 9;
             opacity = 0.5;
         } else if (absZ > 80) {
-            fontSize = Math.random() * (25 - 16) + 16;
+            fontSize = Math.random() * (27 - 16) + 16;
             duration = Math.random() * 3 + 7;
             opacity = 0.7;
         } else {
-            fontSize = Math.random() * (32 - 20) + 20;
+            fontSize = Math.random() * (35 - 20) + 20;
             duration = Math.random() * 2 + 5;
             opacity = 0.9;
         }
-
+    
         const containerWidth = container.offsetWidth;
         el.style.left = Math.random() * (containerWidth - 200) + 'px';
         el.style.top = '0px';   // Bắt đầu từ trên cùng container
         el.style.fontSize = `${fontSize}px`;
         el.style.animationDuration = `${duration}s`;
         el.style.opacity = opacity;
-
+    
         el.style.transform = `translateZ(${z}px)`; // hiệu ứng chiều sâu
-
+    
         container.appendChild(el);
-
+    
         setTimeout(() => el.remove(), duration * 1000 + 1000);
     }
+    
 
-
-    setInterval(CreateFallingElement, 250);
+    setInterval(CreateFallingElement, 220);
 
     // di chuột
     document.addEventListener('mousemove', (e) => {
