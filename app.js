@@ -3,7 +3,7 @@ window.onload = function () {
 
     const texts = [
         'Ngoan xinh yêu♥',
-        'cinn❤️',
+        'cinn♥',
         'Vợ',
         'Em yêu anhh ♥',
         'Luôn bên anh ♥',
