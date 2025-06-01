@@ -23,61 +23,75 @@ window.onload = function () {
         'rgb(255, 240, 251)'
     ];
 
+
+
+    // chống cuộn
+    document.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('wheel', function (e) {
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gesturechange', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', function (e) {
+        e.preventDefault();
+    });
+
+
+    // chữ rơi
     function CreateFallingElement() {
         const el = document.createElement('div');
         el.className = 'falling';
-
-        // chọn màu vs thông điệp chữ
+    
         el.textContent = texts[Math.floor(Math.random() * texts.length)];
         el.style.color = textsColor[Math.floor(Math.random() * textsColor.length)];
-
-        // random độ sâu z (-250 -> 250)
+    
         const z = Math.floor(Math.random() * 500 - 250);
         el.style.setProperty('--z-depth', `${z}px`);
-        el.style.zIndex = 500 - Math.abs(z);
-
-        // các lớp xa trung gần
+    
         const absZ = Math.abs(z);
-        // thông số chữ
+    
         let fontSize, duration, opacity;
-
+    
         if (absZ > 180) {
-            // xa: nhỏ, mờ, chậm
             fontSize = Math.random() * (18 - 12) + 12;
             duration = Math.random() * 3 + 9;
             opacity = 0.5;
         } else if (absZ > 80) {
-            // trung
             fontSize = Math.random() * (25 - 16) + 16;
             duration = Math.random() * 3 + 7;
             opacity = 0.7;
         } else {
-            // gần: to, rõ, nhanh
-            fontSize = Math.random() * (35 - 20) + 20;
+            fontSize = Math.random() * (32 - 20) + 20;
             duration = Math.random() * 2 + 5;
             opacity = 0.9;
         }
-
-        // chiều rộng phân bổ
+    
         const containerWidth = container.offsetWidth;
-
-        // random tầng, font, độ đậm nhạt của chữ
         el.style.left = Math.random() * (containerWidth - 200) + 'px';
+        el.style.top = '0px';   // Bắt đầu từ trên cùng container
         el.style.fontSize = `${fontSize}px`;
         el.style.animationDuration = `${duration}s`;
         el.style.opacity = opacity;
-
-        // hiệu ứng translateZ giả lập 3D
-        el.style.transform = `translateZ(${z}px)`;
-
-        // thêm vào màn hình và xoá khi hết thời gian
+    
+        el.style.transform = `translateZ(${z}px)`; // hiệu ứng chiều sâu
+    
         container.appendChild(el);
+    
         setTimeout(() => el.remove(), duration * 1000 + 1000);
     }
+    
 
-
-
-    setInterval(CreateFallingElement, 150);
+    setInterval(CreateFallingElement, 250);
 
     // di chuột
     document.addEventListener('mousemove', (e) => {
@@ -109,8 +123,8 @@ window.onload = function () {
             currentRotation.y += -dx * 0.15;
 
             // giới hạn góc xoay
-            currentRotation.x = Math.max(-40, Math.min(40, currentRotation.x));
-            currentRotation.y = Math.max(-40, Math.min(40, currentRotation.y));
+            currentRotation.x = Math.max(-50, Math.min(50, currentRotation.x));
+            currentRotation.y = Math.max(-50, Math.min(50, currentRotation.y));
 
             rotateContainer(currentRotation.x, currentRotation.y);
 
