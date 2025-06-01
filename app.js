@@ -1,6 +1,5 @@
 window.onload = function () {
     const container = document.getElementById('container');
-    const containerBGR = document.getElementById('container_Bgr');
 
     const texts = [
         'Nguyễn Mạnh Cường',
@@ -25,43 +24,34 @@ window.onload = function () {
 
 
 
-    // chống cuộn
+    // ✅ Chỉ chặn cuộn bằng 1 ngón, cho phép zoom bằng 2 ngón
     document.addEventListener('touchmove', function (e) {
-        e.preventDefault();
+        if (e.touches.length > 1) return; // Cho phép pinch zoom
+        e.preventDefault();              // Chặn cuộn bằng 1 ngón
     }, { passive: false });
 
+    // ✅ Giữ nguyên để chặn cuộn bằng chuột (không ảnh hưởng pinch zoom)
     document.addEventListener('wheel', function (e) {
         e.preventDefault();
     }, { passive: false });
 
-    document.addEventListener('gesturestart', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('gesturechange', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('gestureend', function (e) {
-        e.preventDefault();
-    });
 
 
     // chữ rơi
     function CreateFallingElement() {
         const el = document.createElement('div');
         el.className = 'falling';
-    
+
         el.textContent = texts[Math.floor(Math.random() * texts.length)];
         el.style.color = textsColor[Math.floor(Math.random() * textsColor.length)];
-    
+
         const z = Math.floor(Math.random() * 500 - 250);
         el.style.setProperty('--z-depth', `${z}px`);
-    
+
         const absZ = Math.abs(z);
-    
+
         let fontSize, duration, opacity;
-    
+
         if (absZ > 180) {
             fontSize = Math.random() * (18 - 12) + 12;
             duration = Math.random() * 3 + 9;
@@ -75,21 +65,21 @@ window.onload = function () {
             duration = Math.random() * 2 + 5;
             opacity = 0.9;
         }
-    
+
         const containerWidth = container.offsetWidth;
         el.style.left = Math.random() * (containerWidth - 200) + 'px';
         el.style.top = '0px';   // Bắt đầu từ trên cùng container
         el.style.fontSize = `${fontSize}px`;
         el.style.animationDuration = `${duration}s`;
         el.style.opacity = opacity;
-    
+
         el.style.transform = `translateZ(${z}px)`; // hiệu ứng chiều sâu
-    
+
         container.appendChild(el);
-    
+
         setTimeout(() => el.remove(), duration * 1000 + 1000);
     }
-    
+
 
     setInterval(CreateFallingElement, 250);
 
@@ -135,12 +125,10 @@ window.onload = function () {
 
     function rotateContainer(rx, ry) {
         container.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        containerBGR.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
     }
 
 
     function rotateContainer(rx, ry) {
         container.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-        containerBGR.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
     }
 };
